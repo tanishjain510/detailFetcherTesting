@@ -2,38 +2,69 @@ import cheerio from "cheerio";
 import http from "http";
 import axios from "axios";
 import fetch from "node-fetch";
-// import { data } from "cheerio/lib/api/attributes";
+import createBrowserless from 'browserless';
+import getHTML from 'html-get'
 const puppy = async (name) => {
-  var dataTosend=""
-  async  function setdata(data) {
-    dataTosend = data;
-    console.log("hello");
-    console.log("data = ",data);
-    return data;
+  var dataTosend = ""
+  // async  function setdata(data) {
+  //   dataTosend = data;
+  //   console.log("hello");
+  //   console.log("data = ",data);
+  //   return data;
+  // }
+  // const url = name;
+  // try 
+  // {
+  //   console.log("response");
+  //    return fetch(url)
+  // .then((response) => response.text())
+  //   // .then(async (data) =>
+  //   // console.log("hello");
+  //   // return axios(url).then((response) => {
+  //   //   console.log(url);
+  //   //   const html_data = response.data;
+  //   //   const $ = cheerio.load(html_data);
+  //   //   const hello = cheerio.load(html_data).html();
+  //   //   return hello;
+  //   // });
+  // }
+  // catch (error) 
+  // {
+  //   console.log("error",error);
+  //   return e
+  // }
+
+  const browserlessFactory = createBrowserless()
+  process.on('exit', () => {
+    console.log('closing resources!' + "tan = ")
+    browserlessFactory.close()
+    // console.log("datatosend", dataTosend);
+    return;
+    // return dataTosend;
+  })
+  const getContent = async url => {
+    const browserContext = browserlessFactory.createContext()
+    const getBrowserless = () => browserContext
+    const result = await getHTML(url, { getBrowserless })
+    await getBrowserless((browser) => browser.destroyContext())
+    console.log("new changeds ");
+    return result
+
   }
-  const url = name;
-  try 
-  {
-    console.log("response");
-     return fetch(url)
-  .then((response) => response.text())
-  // .then(async (data) =>
- 
-  console.log("chnahcal");
-    // console.log("hello");
-    // return axios(url).then((response) => {
-    //   console.log(url);
-    //   const html_data = response.data;
-    //   const $ = cheerio.load(html_data);
-    //   const hello = cheerio.load(html_data).html();
-    //   return hello;
-    // });
-  }
-  catch (error) 
-  {
-    console.log("error",error);
-    return e
-  }
+  await getContent(name)
+    .then(content => {
+      // console.log(content.html)
+      browserlessFactory.close()
+      dataTosend = content.html;
+      // process.exit();
+      // return dataTosend;
+    })
+    .catch(error => {
+      console.error(error)
+      process.exit(1)
+    })
+  console.log("ended");
+  return dataTosend;
 };
 export default puppy;
 
@@ -93,14 +124,14 @@ export default puppy;
 //           const $ = cheerio.load(html_data);
 //           const hello = cheerio.load(html_data).html();
 //           console.log("completed ");
-//           return hello; 
+//           return hello;
 //       });
-//     } 
+//     }
 //     catch (error)
 //      {
 //       console.log(error);
 //       return ""
-//     }    
+//     }
 //   };
 
 //   export default puppy;

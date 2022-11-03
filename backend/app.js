@@ -1,7 +1,7 @@
 import express from "express";
 import puppy from "./getData.js";
 import getUpdatedData from "./gettingdata.js";
-import {setConfigTable,getUrlFromTable} from "./getUrlfromTable.js";
+import { setConfigTable, getUrlFromTable } from "./getUrlfromTable.js";
 import cors from 'cors'
 var app = express();
 app.use(cors())
@@ -19,14 +19,14 @@ app.post("/croneUpdatedata", async (req, res) => {
   res.send("crone run succesfully");
 });
 app.post("/getdata", async (req, res) => {
-  
+
   try {
     const url = req.body.link;
     const data = await puppy(url);
     console.log("supari ");
-  res.send({
-    data: data 
-  });
+    res.send({
+      data: data
+    });
   } catch (error) {
     res.send({
       data: error,
@@ -34,21 +34,21 @@ app.post("/getdata", async (req, res) => {
   }
 });
 app.post("/getUpdatedData", async (req, res) => {
- try {
-  const url = req.body.url
-  const xpath = req.body.xpath;
-  // console.log(url,xpath)
-  //  console.log("url"+url);
-  //  console.log("xapth"+xpath);
-  const data = await getUpdatedData(url,xpath);
+  try {
+    const url = req.body.url
+    const xpath = req.body.xpath;
+    // console.log(url,xpath)
+    //  console.log("url"+url);
+    //  console.log("xapth"+xpath);
+    const data = await getUpdatedData(url, xpath);
     res.send({
       data: data,
     });
- } catch (error) {
-  res.send({
-    data: error,
-  });
- }
+  } catch (error) {
+    res.send({
+      data: error,
+    });
+  }
 });
 
 
